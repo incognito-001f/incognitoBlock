@@ -1,30 +1,62 @@
+# .goreleaser.yml
+version: '2'
+
 project_name: incognito
 
 builds:
   - id: incognito-node
     main: main.go
     binary: incognito-node
-    ldflags:
-      - -s -w
-    flags:
-      - -trimpath
-    env:
-      - CGO_ENABLED=1
     goos:
       - windows
       - linux
     goarch:
       - amd64
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+  - id: incognito-miner
+    main: miner/main.go
+    binary: incognito-miner
+    goos:
+      - windows
+      - linux
+    goarch:
+      - amd64
+    env:
+      - CGO_ENABLED=1
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
 
 archives:
-  - replacements:
+  - id: node-archive
+    builds:
+      - incognito-node
+    format: zip
+    replacements:
+      windows: win
+      linux: linux
+      darwin: osx
+      amd64: x64
+
+  - id: miner-archive
+    builds:
+      - incognito-miner
+    format: zip
+    replacements:
       windows: win
       linux: linux
       darwin: osx
       amd64: x64
 
 checksum:
-  name_template: 'SHA256SUMS'
+  name_template: "SHA256SUMS"
   algorithm: sha256
 
 snapshot:
