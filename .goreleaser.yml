@@ -1,0 +1,38 @@
+project_name: incognito
+
+builds:
+  - id: incognito-node
+    main: main.go
+    binary: incognito-node
+    ldflags:
+      - -s -w
+    flags:
+      - -trimpath
+    env:
+      - CGO_ENABLED=1
+    goos:
+      - windows
+      - linux
+    goarch:
+      - amd64
+
+archives:
+  - replacements:
+      windows: win
+      linux: linux
+      darwin: osx
+      amd64: x64
+
+checksum:
+  name_template: 'SHA256SUMS'
+  algorithm: sha256
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"

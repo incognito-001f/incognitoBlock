@@ -1,0 +1,13 @@
+version: '3'
+services:
+  bootstrap-node:
+    build: .
+    ports:
+      - "8080:8080"
+    command: ["node", "--bootstrap", "--port=8080"]
+
+  regular-node:
+    build: .
+    ports:
+      - "8081:8081"
+    command: ["node", "--connect=localhost:8080", "--port=8081"]
